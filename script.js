@@ -1,5 +1,6 @@
 let headBodyPreview = false;
 let customTextSelection = false;
+let css;
 
 document
   .querySelector("#fontFileHead")
@@ -10,7 +11,19 @@ document
 
     const headFontName = "Font_" + Date.now();
 
-    const css = `
+    if (customTextSelection) {
+      css = `
+        @font-face {
+          font-family: "${headFontName}";
+          src: url("${blobUrl}");
+        }
+
+        #customTextPara {
+          font-family: "${headFontName}";
+        }
+      `;
+    } else {
+      css = `
         @font-face {
           font-family: "${headFontName}";
           src: url("${blobUrl}");
@@ -20,6 +33,7 @@ document
           font-family: "${headFontName}";
         }
       `;
+    }
 
     const style = document.createElement("style");
     style.textContent = css;
@@ -35,7 +49,7 @@ document
 
     const bodyFontName = "Font_" + Date.now();
 
-    const css = `
+    css = `
         @font-face {
           font-family: "${bodyFontName}";
           src: url("${blobUrl}");
@@ -66,7 +80,7 @@ document.querySelector("#headBodyPreviewButton").onclick = function () {
     document.querySelector("#headerPara").innerHTML =
       "<h1>This is a header.</h1>";
 
-    const css = `
+    css = `
     #bodyPara, #headerPara {
       font-family: serif;
       }
@@ -89,7 +103,7 @@ document.querySelector("#headBodyPreviewButton").onclick = function () {
     document.querySelector("#fontFileBody").value = "";
     document.querySelector("#fontFileHead").value = "";
 
-    const css = `
+    css = `
         #bodyPara, #headerPara {
           font-family: serif;
         }
@@ -129,9 +143,11 @@ document.querySelector("#customTextButton").onclick = function () {
     document.querySelector("#contentContainer").style.display = "block";
     document.querySelector("#customTextButton").textContent =
       "Preview font with custom text";
+    document.querySelector("#customTextPara").textContent = "";
+    document.querySelector("#customTextarea").value = "";
     document.querySelector("#fontFileBody").value = "";
     document.querySelector("#fontFileHead").value = "";
-    const css = `
+    css = `
         #headerPara, #customTextPara {
           font-family: serif;
         }
@@ -143,37 +159,12 @@ document.querySelector("#customTextButton").onclick = function () {
   }
 };
 
-// document
-//   .querySelector("#fontFileHead")
-//   .addEventListener("change", function (event) {
-//     event.preventDefault();
-//     const file = event.target.files[0];
-//     const blobUrl = URL.createObjectURL(file);
-
-//     const headFontName = "Font_" + Date.now();
-
-//     const css = `
-//         @font-face {
-//           font-family: "${headFontName}";
-//           src: url("${blobUrl}");
-//         }
-
-//         #customTextPara {
-//           font-family: "${headFontName}";
-//         }
-//       `;
-
-//     const style = document.createElement("style");
-//     style.textContent = css;
-//     document.head.appendChild(style);
-//   });
-
 document.querySelector("#resetButton").onclick = function () {
   document.querySelector("#fontFileBody").value = "";
   document.querySelector("#fontFileHead").value = "";
 
-  const css = `
-        #bodyPara, #headerPara {
+  css = `
+        #bodyPara, #headerPara, #customTextPara {
           font-family: serif;
         }
       `;
@@ -188,8 +179,8 @@ document.addEventListener("keyup", (e) => {
     document.querySelector("#fontFileBody").value = "";
     document.querySelector("#fontFileHead").value = "";
 
-    const css = `
-        #bodyPara, #headerPara {
+    css = `
+        #bodyPara, #headerPara, #customTextPara {
           font-family: serif;
         }
       `;
@@ -207,15 +198,15 @@ document.addEventListener("keyup", (e) => {
     document.querySelector("#resetButton").style.display = "inline-block";
     document.querySelector("#customTextButton").textContent =
       "Preview font with custom text";
-    document.querySelector("#customTextPara").textContent = customText;
+    document.querySelector("#customTextPara").textContent = "";
+    document.querySelector("#customTextarea").value = "";
     document.querySelector("#fontFileBody").value = "";
     document.querySelector("#fontFileHead").value = "";
-    const css = `
+    css = `
         #bodyPara, #headerPara {
           font-family: serif;
         }
       `;
-
     const style = document.createElement("style");
     style.textContent = css;
     document.head.appendChild(style);
@@ -233,7 +224,7 @@ document.addEventListener("keyup", (e) => {
     document.querySelector("#fontFileBody").value = "";
     document.querySelector("#fontFileHead").value = "";
 
-    const css = `
+    css = `
         #bodyPara, #headerPara {
           font-family: serif;
         }
@@ -242,5 +233,11 @@ document.addEventListener("keyup", (e) => {
     const style = document.createElement("style");
     style.textContent = css;
     document.head.appendChild(style);
+  }
+});
+
+document.querySelector("#customTextarea").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
   }
 });
